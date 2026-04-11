@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+:root {
+  --cream: #e8e0d6;
+  --gold: #c9a85c;
+  --gold-light: #dfc88a;
+  --charcoal: #0a0a0a;
+  --charcoal-light: #141414;
+  --warm-gray: #2a2725;
+  --warm-gray-light: #3d3835;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--charcoal);
+}
+
+/* Noise overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--charcoal);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--warm-gray-light);
+  border-radius: 3px;
+}
+
+/* Portfolio card hover */
+.portfolio-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--charcoal-light);
+  border: 1px solid var(--warm-gray);
+  transition: border-color 0.4s ease, transform 0.4s ease;
+}
+.portfolio-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+}
+.portfolio-card .card-image {
+  transition: transform 0.6s ease;
+}
+.portfolio-card:hover .card-image {
+  transform: scale(1.03);
+}
+
+/* Divider */
+.gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* Glow effect behind hero text */
+.hero-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 168, 92, 0.08) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
