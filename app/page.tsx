@@ -68,6 +68,24 @@ const stats = [
 export default function Home() {
   const [formData, setFormData] = useState({ name: "", email: "", restaurant: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!formData.name || !formData.email || !formData.message) return;
+    setSending(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (res.ok) setSubmitted(true);
+    } catch {
+      // silent fail
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <main className="relative">
@@ -380,10 +398,11 @@ export default function Home() {
                 />
               </div>
               <button
-                onClick={() => setSubmitted(true)}
-                className="w-full py-3.5 rounded-full bg-[#c9a85c] text-[#0a0a0a] font-semibold text-base hover:bg-[#dfc88a] transition-colors"
+                onClick={handleSubmit}
+                disabled={sending}
+                className="w-full py-3.5 rounded-full bg-[#c9a85c] text-[#0a0a0a] font-semibold text-base hover:bg-[#dfc88a] transition-colors disabled:opacity-50"
               >
-                Send Message
+                {sending ? "Sending..." : "Send Message"}
               </button>
             </motion.div>
           )}
