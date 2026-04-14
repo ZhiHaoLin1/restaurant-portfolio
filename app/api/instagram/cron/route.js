@@ -57,12 +57,13 @@ if (authHeader !== expected) {
           .from("posts")
           .upsert(
             {
-              client_id: client.id,
-              instagram_post_id: post.id,
-              caption: post.caption || "",
-              media_url: post.media_url,
-              permalink: post.permalink,
-              timestamp: post.timestamp,
+			client_id: client.id,
+			instagram_post_id: post.id,
+			caption: post.caption || "",
+			media_url: post.media_url,
+			thumbnail_url: post.thumbnail_url || null,
+			permalink: post.permalink,
+			timestamp: post.timestamp,
             },
             { onConflict: "instagram_post_id" }
           );
