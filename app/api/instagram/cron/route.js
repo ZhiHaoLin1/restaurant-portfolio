@@ -2,11 +2,13 @@ import supabase from "@/lib/supabase";
 
 export async function GET(request) {
   // Secure the cron endpoint
-	const authHeader = request.headers.get("authorization");
-	const expected = "Bearer " + process.env.CRON_SECRET;
-	if (authHeader !== expected) {
-	return Response.json({ error: "Unauthorized" }, { status: 401 });
-	}
+const authHeader = request.headers.get("authorization");
+console.log("Received header:", authHeader);
+console.log("Expected:", "Bearer " + process.env.CRON_SECRET);
+const expected = "Bearer " + process.env.CRON_SECRET;
+if (authHeader !== expected) {
+  return Response.json({ error: "Unauthorized", received: authHeader, expected: "Bearer " + process.env.CRON_SECRET?.slice(0,3) + "..." }, { status: 401 });
+}
   // Get all clients from Supabase
   const { data: clients, error: clientsError } = await supabase
     .from("clients")
