@@ -2,7 +2,7 @@ import supabase from "@/lib/supabase";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function PostPage({
   params,
@@ -11,16 +11,35 @@ export default async function PostPage({
 }) {
   const { slug } = await params;
 
+  // Get post and client token from Supabase
   const { data: post } = await supabase
     .from("posts")
-    .select("*")
+    .select("*, clients(access_token)")
     .eq("instagram_post_id", slug)
     .single();
 
   if (!post) notFound();
 
-  const isVideo = post.media_url?.includes(".mp4");
-  const imageSrc = isVideo ? post.thumbnail_url : post.media_url;
+  // Fetch fresh media URL from Instagram Graph API
+  let freshMediaUrl = post.media_url;
+  let freshThumbnailUrl = post.thumbnail_url;
+
+  try {
+    const token = post.clients?.access_token;
+    if (token) {
+      const res = await fetch(
+        `https://graph.instagram.com/v21.0/${slug}?fields=media_url,thumbnail_url,media_type&access_token=${token}`
+      );
+      const fresh = await res.json();
+      if (fresh.media_url) freshMediaUrl = fresh.media_url;
+      if (fresh.thumbnail_url) freshThumbnailUrl = fresh.thumbnail_url;
+    }
+  } catch {
+    // Fall back to stored URLs if API call fails
+  }
+
+  const isVideo = post.media_url?.includes(".mp4") || freshMediaUrl?.includes(".mp4");
+  const imageSrc = isVideo ? freshThumbnailUrl : freshMediaUrl;
 
   return (
     <main className="relative min-h-screen bg-[#0a0a0a] text-[#e8e0d6]">
@@ -53,8 +72,17 @@ export default async function PostPage({
             })}
           </p>
 
-          {/* Image */}
-          {imageSrc && (
+          {/* Media */}
+          {isVideo && freshMediaUrl ? (
+            <div className="rounded-lg overflow-hidden border border-[#2a2725] mb-10">
+              <video
+                src={freshMediaUrl}
+                poster={freshThumbnailUrl || undefined}
+                controls
+                className="w-full"
+              />
+            </div>
+          ) : imageSrc ? (
             <div className="rounded-lg overflow-hidden border border-[#2a2725] mb-10">
               <img
                 src={imageSrc}
@@ -62,7 +90,7 @@ export default async function PostPage({
                 className="w-full object-cover"
               />
             </div>
-          )}
+          ) : null}
 
           <div className="h-px bg-gradient-to-r from-transparent via-[#c9a85c] to-transparent mb-10" />
 
