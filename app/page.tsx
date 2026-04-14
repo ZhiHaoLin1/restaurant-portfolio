@@ -58,12 +58,6 @@ const fadeUp: Variants = {
   }),
 };
 
-const stats = [
-  { number: "6+", label: "Restaurants Launched" },
-  { number: "100%", label: "Mobile-First" },
-  { number: "<2s", label: "Load Times" },
-];
-
 const standardFeatures = [
   "Mobile-optimized design",
   "Homepage",
@@ -75,20 +69,25 @@ const standardFeatures = [
   "Link to reservation platform",
   "Link to online ordering",
   "Events and calendar",
-  "SEO setup (schema, meta tags, Search Console)",
   "Gift cards link",
+  "SEO setup (schema, meta tags, Search Console)",
 ];
 
-const premiumFeatures = [
+const professionalFeatures = [
   "Everything in Standard",
-  "Instagram feed auto-published as articles",
+  "Google reviews widget",
   "Embedded online ordering",
   "Embedded reservation system",
-  "Google reviews widget",
   "1 additional custom page",
 ];
 
-const retainerFeatures = [
+const premiumFeatures = [
+  "Everything in Professional",
+  "Instagram feed auto-published as articles",
+  "1 additional custom page",
+];
+
+const retainerPlans = [
   {
     name: "Basic",
     price: "$100",
@@ -213,7 +212,6 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -230,23 +228,24 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* STATS BAR */}
+      {/* HIGHLIGHT BAR */}
       <div className="gold-line" />
-      <section className="py-16 px-6">
-        <div className="max-w-5xl mx-auto grid grid-cols-3 gap-6 text-center">
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={i}
-              variants={fadeUp}
-            >
-              <p className="font-display text-4xl md:text-5xl font-bold text-[#c9a85c]">{s.number}</p>
-              <p className="text-sm text-[#e8e0d6]/50 mt-1">{s.label}</p>
-            </motion.div>
-          ))}
+      <section className="py-12 px-6">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16 text-center">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
+            <p className="font-display text-3xl font-bold text-[#c9a85c]">SEO</p>
+            <p className="text-sm text-[#e8e0d6]/50 mt-1">Prioritized</p>
+          </motion.div>
+          <div className="h-8 w-px bg-[#2a2725] hidden sm:block" />
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp}>
+            <p className="font-display text-3xl font-bold text-[#c9a85c]">100%</p>
+            <p className="text-sm text-[#e8e0d6]/50 mt-1">Mobile-First</p>
+          </motion.div>
+          <div className="h-8 w-px bg-[#2a2725] hidden sm:block" />
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2} variants={fadeUp}>
+            <p className="font-display text-3xl font-bold text-[#c9a85c]">&lt;2s</p>
+            <p className="text-sm text-[#e8e0d6]/50 mt-1">Load Times</p>
+          </motion.div>
         </div>
       </section>
       <div className="gold-line" />
@@ -342,7 +341,7 @@ export default function Home() {
                   </svg>
                 ),
                 title: "Blazing Fast",
-                desc: "Every site scores 90+ on Google PageSpeed. Fast load times mean fewer lost guests and better search rankings.",
+                desc: "Every site is built for speed with optimized images, clean code, and no bloat. Fast load times mean fewer lost guests and better search rankings.",
               },
               {
                 icon: (
@@ -385,7 +384,7 @@ export default function Home() {
 
       {/* PRICING */}
       <section id="pricing" className="py-24 px-6">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -403,8 +402,8 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {/* Tiers */}
-          <div className="grid md:grid-cols-2 gap-6 mb-16">
+          {/* Three tiers */}
+          <div className="grid md:grid-cols-3 gap-6 mb-10">
             {/* Standard */}
             <motion.div
               initial="hidden"
@@ -412,16 +411,49 @@ export default function Home() {
               viewport={{ once: true }}
               custom={0}
               variants={fadeUp}
-              className="rounded-lg border border-[#2a2725] bg-[#0e0d0b] p-8"
+              className="rounded-lg border border-[#2a2725] bg-[#0e0d0b] p-8 flex flex-col"
             >
               <p className="text-sm font-semibold tracking-[0.15em] uppercase text-[#e8e0d6]/50 mb-2">Standard</p>
-              <div className="flex items-end gap-2 mb-1">
-                <span className="font-display text-5xl font-bold">$1,500</span>
+              <div className="mb-1">
+                <span className="font-display text-4xl font-bold">$1,500</span>
               </div>
-              <p className="text-sm text-[#e8e0d6]/40 mb-8">Starting price, one-time</p>
-              <div className="h-px bg-[#2a2725] mb-8" />
-              <ul className="space-y-3 mb-8">
+              <p className="text-sm text-[#e8e0d6]/40 mb-6">Starting price, one-time</p>
+              <div className="h-px bg-[#2a2725] mb-6" />
+              <ul className="space-y-3 mb-8 flex-1">
                 {standardFeatures.map((f) => (
+                  <li key={f} className="flex items-start gap-3 text-sm text-[#e8e0d6]/70">
+                    <svg className="text-[#c9a85c] mt-0.5 shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href="#contact"
+                className="block text-center py-3 rounded-full border border-[#3d3835] text-[#e8e0d6] font-semibold text-sm hover:border-[#c9a85c] hover:text-[#c9a85c] transition-colors"
+              >
+                Get Started
+              </a>
+            </motion.div>
+
+            {/* Professional */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              custom={1}
+              variants={fadeUp}
+              className="rounded-lg border border-[#2a2725] bg-[#0e0d0b] p-8 flex flex-col"
+            >
+              <p className="text-sm font-semibold tracking-[0.15em] uppercase text-[#e8e0d6]/50 mb-2">Professional</p>
+              <div className="mb-1">
+                <span className="font-display text-4xl font-bold">$2,500</span>
+              </div>
+              <p className="text-sm text-[#e8e0d6]/40 mb-6">Starting price, one-time</p>
+              <div className="h-px bg-[#2a2725] mb-6" />
+              <ul className="space-y-3 mb-8 flex-1">
+                {professionalFeatures.map((f) => (
                   <li key={f} className="flex items-start gap-3 text-sm text-[#e8e0d6]/70">
                     <svg className="text-[#c9a85c] mt-0.5 shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M20 6L9 17l-5-5" />
@@ -443,20 +475,20 @@ export default function Home() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              custom={1}
+              custom={2}
               variants={fadeUp}
-              className="rounded-lg border border-[#c9a85c]/40 bg-[#0e0d0b] p-8 relative"
+              className="rounded-lg border border-[#c9a85c]/40 bg-[#0e0d0b] p-8 flex flex-col relative"
             >
               <div className="absolute top-4 right-4 text-xs font-semibold tracking-[0.15em] uppercase text-[#0a0a0a] bg-[#c9a85c] px-3 py-1 rounded-full">
                 Most Popular
               </div>
               <p className="text-sm font-semibold tracking-[0.15em] uppercase text-[#c9a85c] mb-2">Premium</p>
-              <div className="flex items-end gap-2 mb-1">
-                <span className="font-display text-5xl font-bold">$3,500</span>
+              <div className="mb-1">
+                <span className="font-display text-4xl font-bold">$3,500</span>
               </div>
-              <p className="text-sm text-[#e8e0d6]/40 mb-8">Starting price, one-time</p>
-              <div className="h-px bg-[#2a2725] mb-8" />
-              <ul className="space-y-3 mb-8">
+              <p className="text-sm text-[#e8e0d6]/40 mb-6">Starting price, one-time</p>
+              <div className="h-px bg-[#2a2725] mb-6" />
+              <ul className="space-y-3 mb-8 flex-1">
                 {premiumFeatures.map((f) => (
                   <li key={f} className="flex items-start gap-3 text-sm text-[#e8e0d6]/70">
                     <svg className="text-[#c9a85c] mt-0.5 shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -476,68 +508,65 @@ export default function Home() {
           </div>
 
           {/* Hosting note */}
-          <motion.div
+          <motion.p
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            custom={2}
+            custom={3}
             variants={fadeUp}
-            className="text-center mb-12"
+            className="text-center text-[#e8e0d6]/40 text-sm mb-16"
           >
-            <p className="text-[#e8e0d6]/40 text-sm">
-              After your site launches, you can host it yourself or add an annual hosting plan for <span className="text-[#e8e0d6]/70">$200/year</span> covering your domain and Vercel hosting.
-            </p>
-          </motion.div>
+            After launch, host it yourself or add an annual hosting plan for <span className="text-[#e8e0d6]/70">$200/year</span> covering your domain and hosting.
+          </motion.p>
 
           {/* Retainer */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            custom={3}
+            custom={4}
             variants={fadeUp}
+            className="text-center mb-8"
           >
-            <div className="text-center mb-8">
-              <p className="text-[#c9a85c] text-sm font-semibold tracking-[0.2em] uppercase mb-2">Optional</p>
-              <h3 className="font-display text-2xl md:text-3xl font-bold">Monthly Maintenance</h3>
-              <p className="text-[#e8e0d6]/50 mt-2 text-sm max-w-md mx-auto">
-                Menu updates, photo swaps, hour changes, and peace of mind. Restaurant owners have enough to manage.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-              {retainerFeatures.map((r, i) => (
-                <motion.div
-                  key={r.name}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  custom={i}
-                  variants={fadeUp}
-                  className="rounded-lg border border-[#2a2725] bg-[#0e0d0b] p-6"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="font-display text-lg font-semibold">{r.name}</p>
-                    <p className="text-xs text-[#e8e0d6]/40">{r.desc}</p>
-                  </div>
-                  <div className="flex items-end gap-1 mb-6">
-                    <span className="font-display text-3xl font-bold text-[#c9a85c]">{r.price}</span>
-                    <span className="text-[#e8e0d6]/40 text-sm mb-1">{r.period}</span>
-                  </div>
-                  <ul className="space-y-2.5">
-                    {r.items.map((item) => (
-                      <li key={item} className="flex items-start gap-2.5 text-sm text-[#e8e0d6]/60">
-                        <svg className="text-[#c9a85c] mt-0.5 shrink-0" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M20 6L9 17l-5-5" />
-                        </svg>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              ))}
-            </div>
+            <p className="text-[#c9a85c] text-sm font-semibold tracking-[0.2em] uppercase mb-2">Optional</p>
+            <h3 className="font-display text-2xl md:text-3xl font-bold">Monthly Maintenance</h3>
+            <p className="text-[#e8e0d6]/50 mt-2 text-sm max-w-md mx-auto">
+              Menu updates, photo swaps, hour changes, and peace of mind. Restaurant owners have enough to manage.
+            </p>
           </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {retainerPlans.map((r, i) => (
+              <motion.div
+                key={r.name}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                custom={i}
+                variants={fadeUp}
+                className="rounded-lg border border-[#2a2725] bg-[#0e0d0b] p-6"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <p className="font-display text-lg font-semibold">{r.name}</p>
+                  <p className="text-xs text-[#e8e0d6]/40">{r.desc}</p>
+                </div>
+                <div className="flex items-end gap-1 mb-6">
+                  <span className="font-display text-3xl font-bold text-[#c9a85c]">{r.price}</span>
+                  <span className="text-[#e8e0d6]/40 text-sm mb-1">{r.period}</span>
+                </div>
+                <ul className="space-y-2.5">
+                  {r.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2.5 text-sm text-[#e8e0d6]/60">
+                      <svg className="text-[#c9a85c] mt-0.5 shrink-0" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M20 6L9 17l-5-5" />
+                      </svg>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
