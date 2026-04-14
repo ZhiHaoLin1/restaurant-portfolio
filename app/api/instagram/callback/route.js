@@ -3,9 +3,21 @@ import supabase from "@/lib/supabase";
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
+  const stateParam = searchParams.get("state");
 
   if (!code) {
     return Response.json({ error: "No code provided" }, { status: 400 });
+  }
+
+  // Parse client info from state
+  let clientName = "";
+  let clientSlug = "";
+  try {
+    const state = JSON.parse(decodeURIComponent(stateParam || "{}"));
+    clientName = state.name || "";
+    clientSlug = state.slug || "";
+  } catch {
+    // ignore parse errors
   }
 
   // Step 1: Exchange code for short-lived token
@@ -28,28 +40,36 @@ export async function GET(request) {
     `https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=${process.env.INSTAGRAM_APP_SECRET}&access_token=${shortLivedToken}`
   );
 
-  const longLivedData = await longLivedRes.json();
-  console.log("Long lived token response:", longLivedData);
-  const { access_token: longLivedToken, expires_in } = longLivedData;
-
+  const { access_token: longLivedToken, expires_in } = await longLivedRes.json();
   const expires_at = new Date(Date.now() + expires_in * 1000).toISOString();
 
   // Step 3: Save to Supabase
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("clients")
     .upsert(
       {
         instagram_user_id: String(user_id),
+        name: clientName,
+        slug: clientSlug,
         access_token: longLivedToken,
         expires_at,
       },
       { onConflict: "instagram_user_id" }
-    );
+    )
+    .select()
+    .single();
 
   if (error) {
     console.error("Supabase error:", error);
     return Response.json({ error: "Failed to save token" }, { status: 500 });
   }
 
-  return Response.json({ success: true, user_id });
+  return Response.json({
+    success: true,
+    client: {
+      id: data.id,
+      name: data.name,
+      slug: data.slug,
+    }
+  });
 }
