@@ -52,15 +52,13 @@ export default async function BlogPage() {
                   className="group portfolio-card"
                 >
                   {/* Image */}
-                  {post.media_url && (
+                  {(post.media_url || post.thumbnail_url) && (
                     <div className="aspect-square overflow-hidden">
-<img
-  src={post.media_url || post.thumbnail_url}
-  alt={post.caption?.slice(0, 60) || "Instagram post"}
-  className="card-image w-full h-full object-cover"
-  width={500}
-  height={500}
-  />
+                      <img
+                        src={post.media_url || post.thumbnail_url}
+                        alt={post.caption?.slice(0, 60) || "Instagram post"}
+                        className="card-image w-full h-full object-cover"
+                      />
                     </div>
                   )}
 
