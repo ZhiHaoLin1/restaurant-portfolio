@@ -42,7 +42,7 @@ export async function GET(request) {
 
       // Step 2: Fetch latest posts from Instagram
       const postsRes = await fetch(
-        `https://graph.instagram.com/v21.0/me/media?fields=id,caption,media_url,permalink,timestamp&access_token=${client.access_token}`
+         `https://graph.instagram.com/v21.0/me/media?fields=id,caption,media_url,thumbnail_url,permalink,timestamp&access_token=${client.access_token}`
       );
       const { data: posts } = await postsRes.json();
 
