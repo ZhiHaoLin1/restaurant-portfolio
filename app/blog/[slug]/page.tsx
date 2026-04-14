@@ -7,15 +7,20 @@ export const revalidate = 3600;
 export default async function PostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const { slug } = await params;
+
   const { data: post } = await supabase
     .from("posts")
     .select("*")
-    .eq("instagram_post_id", params.slug)
+    .eq("instagram_post_id", slug)
     .single();
 
   if (!post) notFound();
+
+  const isVideo = post.media_url?.includes(".mp4");
+  const imageSrc = isVideo ? post.thumbnail_url : post.media_url;
 
   return (
     <main className="relative min-h-screen bg-[#0a0a0a] text-[#e8e0d6]">
@@ -49,10 +54,10 @@ export default async function PostPage({
           </p>
 
           {/* Image */}
-          {post.media_url && (
+          {imageSrc && (
             <div className="rounded-lg overflow-hidden border border-[#2a2725] mb-10">
               <img
-                src={post.media_url}
+                src={imageSrc}
                 alt={post.caption?.slice(0, 60) || "Instagram post"}
                 className="w-full object-cover"
               />
