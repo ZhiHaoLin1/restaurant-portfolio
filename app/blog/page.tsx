@@ -45,44 +45,49 @@ export default async function BlogPage() {
             <p className="text-center text-[#e8e0d6]/40">No posts found.</p>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post) => (
-                <Link
-                  key={post.instagram_post_id}
-                  href={`/blog/${post.instagram_post_id}`}
-                  className="group portfolio-card"
-                >
-                  {/* Image */}
-                  {(post.media_url || post.thumbnail_url) && (
-                    <div className="aspect-square overflow-hidden">
-                      <img
-                        src={post.media_url || post.thumbnail_url}
-                        alt={post.caption?.slice(0, 60) || "Instagram post"}
-                        className="card-image w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
+              {posts.map((post) => {
+                const isVideo = post.media_url?.includes(".mp4");
+                const imageSrc = isVideo ? post.thumbnail_url : post.media_url;
 
-                  {/* Content */}
-                  <div className="p-5">
-                    <p className="text-xs font-medium text-[#c9a85c] mb-3">
-                      {new Date(post.timestamp).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </p>
-                    <p className="text-sm text-[#e8e0d6]/70 leading-relaxed line-clamp-3">
-                      {post.caption || "No caption"}
-                    </p>
-                    <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-[#c9a85c] opacity-0 group-hover:opacity-100 transition-opacity">
-                      Read More
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M7 17L17 7M17 7H7M17 7V17" />
-                      </svg>
+                return (
+                  <Link
+                    key={post.instagram_post_id}
+                    href={`/blog/${post.instagram_post_id}`}
+                    className="group portfolio-card"
+                  >
+                    {/* Image */}
+                    {imageSrc && (
+                      <div className="aspect-square overflow-hidden">
+                        <img
+                          src={imageSrc}
+                          alt={post.caption?.slice(0, 60) || "Instagram post"}
+                          className="card-image w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+
+                    {/* Content */}
+                    <div className="p-5">
+                      <p className="text-xs font-medium text-[#c9a85c] mb-3">
+                        {new Date(post.timestamp).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </p>
+                      <p className="text-sm text-[#e8e0d6]/70 leading-relaxed line-clamp-3">
+                        {post.caption || "No caption"}
+                      </p>
+                      <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-[#c9a85c] opacity-0 group-hover:opacity-100 transition-opacity">
+                        Read More
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M7 17L17 7M17 7H7M17 7V17" />
+                        </svg>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           )}
         </div>
