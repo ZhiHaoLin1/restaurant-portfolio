@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { useState } from "react";
 
 const projects = [
@@ -47,8 +48,6 @@ const projects = [
     image: "https://api.microlink.io/?url=https://pizza-truck-lime.vercel.app/&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&waitForTimeout=3000",
   },
 ];
-
-import type { Variants } from "framer-motion";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -277,9 +276,12 @@ export default function Home() {
               I Grew Up in a Restaurant
             </h2>
             <p className="text-[#e8e0d6]/50 mt-6 max-w-2xl mx-auto text-lg leading-relaxed">
-              I grew up in my family&apos;s Chinese takeout kitchen. I understand the pace, the margins,
-              and the hustle of the restaurant business from the inside. When I build your website,
-              I&apos;m not just thinking about design — I&apos;m thinking about how to get more people through your door.
+              I grew up in my family&apos;s Chinese takeout restaurant — back then, everything ran on
+              pen and paper and a website was an afterthought. But today the internet drives foot traffic,
+              and a well-built website elevates your brand. Every restaurant now has social media, a website,
+              and third-party app affiliations. My goal is to concentrate that audience on your own website
+              instead of letting it scatter across platforms like Yelp, Facebook, Instagram, or food delivery
+              apps. Your website should be the first place people land when they search for your restaurant.
             </p>
           </motion.div>
 
