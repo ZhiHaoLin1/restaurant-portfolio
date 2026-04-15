@@ -5,9 +5,10 @@ export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
   const { data: posts } = await supabase
-    .from("posts")
-    .select("*")
-    .order("timestamp", { ascending: false });
+  .from("posts")
+  .select("*")
+  .eq("client_id", process.env.CLIENT_ID)
+  .order("timestamp", { ascending: false });
 
   return (
     <main className="relative min-h-screen bg-[#0a0a0a] text-[#e8e0d6]">
