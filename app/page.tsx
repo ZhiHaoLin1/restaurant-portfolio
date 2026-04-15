@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { useState } from "react";
 
@@ -58,69 +58,77 @@ const fadeUp: Variants = {
   }),
 };
 
-const standardFeatures = [
-  "Mobile-optimized design",
-  "Homepage",
-  "About (story, staff, press)",
-  "Contact form (private events, catering, jobs)",
-  "Photo gallery",
-  "Hours and location",
-  "Menu display",
-  "Link to reservation platform",
-  "Link to online ordering",
-  "Events and calendar",
-  "Gift cards link",
-  "SEO setup (schema, meta tags, Search Console)",
-];
-
-const professionalFeatures = [
-  "Everything in Standard",
-  "Google reviews widget",
-  "Embedded online ordering",
-  "Embedded reservation system",
-  "1 additional custom page",
-];
-
-const premiumFeatures = [
-  "Everything in Professional",
-  "Instagram feed auto-published as articles",
-  "1 additional custom page",
-];
-
-const retainerPlans = [
+const tiers = [
   {
-    name: "Basic",
-    price: "$100",
-    period: "/month",
-    desc: "For Standard sites",
-    items: [
-      "Hosting covered",
-      "Security updates",
-      "Up to 2 content changes/month",
-      "Email support",
+    name: "Standard",
+    price: "$1,500",
+    tag: "Core presence",
+    description: "Everything a restaurant needs to look credible and get found online.",
+    features: [
+      "Mobile-optimized design",
+      "Homepage, About, Gallery",
+      "Contact form (events, catering, jobs)",
+      "Hours, location, Google Maps",
+      "Menu display",
+      "Links to reservation and ordering",
+      "Events and calendar",
+      "Gift cards link",
+      "SEO setup",
     ],
   },
   {
-    name: "Growth",
-    price: "$150",
-    period: "/month",
-    desc: "For Premium sites",
-    items: [
-      "Everything in Basic",
-      "Up to 5 content changes/month",
-      "Instagram feed monitoring",
-      "Priority response",
+    name: "Professional",
+    price: "$2,500",
+    tag: "Convert more guests",
+    description: "Customers order and book without ever leaving your site.",
+    features: [
+      "Everything in Standard",
+      "Embedded online ordering",
+      "Embedded reservation system",
+      "Google reviews widget",
+      "1 additional custom page",
     ],
+    highlight: true,
   },
+  {
+    name: "Premium",
+    price: "$3,500",
+    tag: "Always-on content",
+    description: "Your Instagram posts automatically become pages on your website.",
+    features: [
+      "Everything in Professional",
+      "Instagram feed auto-published as articles",
+      "1 additional custom page",
+    ],
+    featured: true,
+  },
+];
+
+const navLinks = [
+  { label: "Work", href: "#work" },
+  { label: "About", href: "#about" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Home() {
-  const [formData, setFormData] = useState({ name: "", email: "", restaurant: "", message: "" });
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    restaurant: "",
+    instagram: "",
+    type: "",
+    tier: "",
+    hasWebsite: "",
+    timeline: "",
+    message: "",
+  });
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
 
   const handleSubmit = async () => {
-    if (!formData.name || !formData.email || !formData.message) return;
+    if (!formData.name || !formData.email || !formData.restaurant) return;
     setSending(true);
     try {
       const res = await fetch("/api/contact", {
@@ -144,19 +152,70 @@ export default function Home() {
           <a href="#" className="font-display text-xl font-semibold tracking-tight">
             Zhi<span className="text-[#c9a85c]">.</span>
           </a>
+
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-[#e8e0d6]/70">
-            <a href="#work" className="hover:text-[#c9a85c] transition-colors">Work</a>
-            <a href="#about" className="hover:text-[#c9a85c] transition-colors">About</a>
-            <a href="#pricing" className="hover:text-[#c9a85c] transition-colors">Pricing</a>
-            <a href="#contact" className="hover:text-[#c9a85c] transition-colors">Contact</a>
+            {navLinks.map((l) => (
+              <a key={l.label} href={l.href} className="hover:text-[#c9a85c] transition-colors">{l.label}</a>
+            ))}
           </div>
           <a
             href="#contact"
-            className="text-sm font-semibold px-5 py-2 rounded-full bg-[#c9a85c] text-[#0a0a0a] hover:bg-[#dfc88a] transition-colors"
+            className="hidden md:inline-flex text-sm font-semibold px-5 py-2 rounded-full bg-[#c9a85c] text-[#0a0a0a] hover:bg-[#dfc88a] transition-colors"
           >
             Get a Quote
           </a>
+
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden p-2 text-[#e8e0d6]/70 hover:text-[#c9a85c] transition-colors"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              {menuOpen ? (
+                <path d="M18 6L6 18M6 6l12 12" />
+              ) : (
+                <>
+                  <path d="M3 6h18M3 12h18M3 18h18" />
+                </>
+              )}
+            </svg>
+          </button>
         </div>
+
+        {/* Mobile drawer */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="md:hidden border-t border-[#2a2725] bg-[#0a0a0a] overflow-hidden"
+            >
+              <div className="px-6 py-4 flex flex-col gap-4">
+                {navLinks.map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="text-sm font-medium text-[#e8e0d6]/70 hover:text-[#c9a85c] transition-colors py-1"
+                  >
+                    {l.label}
+                  </a>
+                ))}
+                <a
+                  href="#contact"
+                  onClick={() => setMenuOpen(false)}
+                  className="mt-2 text-center text-sm font-semibold px-5 py-2.5 rounded-full bg-[#c9a85c] text-[#0a0a0a] hover:bg-[#dfc88a] transition-colors"
+                >
+                  Get a Quote
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* HERO */}
@@ -197,21 +256,14 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.4 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <a
-              href="#work"
-              className="px-8 py-3.5 rounded-full bg-[#c9a85c] text-[#0a0a0a] font-semibold text-base hover:bg-[#dfc88a] transition-colors"
-            >
+            <a href="#work" className="px-8 py-3.5 rounded-full bg-[#c9a85c] text-[#0a0a0a] font-semibold text-base hover:bg-[#dfc88a] transition-colors">
               See My Work
             </a>
-            <a
-              href="#contact"
-              className="px-8 py-3.5 rounded-full border border-[#3d3835] text-[#e8e0d6] font-semibold text-base hover:border-[#c9a85c] hover:text-[#c9a85c] transition-colors"
-            >
+            <a href="#contact" className="px-8 py-3.5 rounded-full border border-[#3d3835] text-[#e8e0d6] font-semibold text-base hover:border-[#c9a85c] hover:text-[#c9a85c] transition-colors">
               Start a Project
             </a>
           </motion.div>
         </div>
-
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -253,14 +305,7 @@ export default function Home() {
       {/* WORK */}
       <section id="work" className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={0}
-            variants={fadeUp}
-            className="text-center mb-16"
-          >
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-16">
             <p className="text-[#c9a85c] text-sm font-semibold tracking-[0.2em] uppercase mb-4">Portfolio</p>
             <h2 className="font-display text-4xl md:text-5xl font-bold">Recent Work</h2>
           </motion.div>
@@ -279,19 +324,12 @@ export default function Home() {
                 className="group portfolio-card"
               >
                 <div className="aspect-video overflow-hidden">
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    className="card-image w-full h-full object-cover object-top"
-                    loading="lazy"
-                  />
+                  <img src={p.image} alt={p.name} className="card-image w-full h-full object-cover object-top" loading="lazy" />
                 </div>
                 <div className="p-5">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-display text-xl font-semibold">{p.name}</h3>
-                    <span className="text-xs font-medium text-[#c9a85c] bg-[#c9a85c]/10 px-2.5 py-1 rounded-full">
-                      {p.tag}
-                    </span>
+                    <span className="text-xs font-medium text-[#c9a85c] bg-[#c9a85c]/10 px-2.5 py-1 rounded-full">{p.tag}</span>
                   </div>
                   <p className="text-sm text-[#e8e0d6]/50 leading-relaxed">{p.description}</p>
                   <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-[#c9a85c] opacity-0 group-hover:opacity-100 transition-opacity">
@@ -310,18 +348,9 @@ export default function Home() {
       {/* ABOUT */}
       <section id="about" className="py-24 px-6 bg-[#0e0d0b]">
         <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={0}
-            variants={fadeUp}
-            className="text-center mb-16"
-          >
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-16">
             <p className="text-[#c9a85c] text-sm font-semibold tracking-[0.2em] uppercase mb-4">Why Work With Me</p>
-            <h2 className="font-display text-4xl md:text-5xl font-bold">
-              I Grew Up in a Restaurant
-            </h2>
+            <h2 className="font-display text-4xl md:text-5xl font-bold">I Grew Up in a Restaurant</h2>
             <p className="text-[#e8e0d6]/50 mt-6 max-w-2xl mx-auto text-lg leading-relaxed">
               I grew up in my family&apos;s Chinese takeout restaurant. Back then, everything ran on
               pen and paper and a website was an afterthought. Today the internet drives foot traffic,
@@ -331,48 +360,25 @@ export default function Home() {
               Your website should be the first place people land when they search for your restaurant.
             </p>
           </motion.div>
-
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                  </svg>
-                ),
+                icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>,
                 title: "Blazing Fast",
                 desc: "Every site is built for speed with optimized images, clean code, and no bloat. Fast load times mean fewer lost guests and better search rankings.",
               },
               {
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <rect x="5" y="2" width="14" height="20" rx="2" />
-                    <path d="M12 18h.01" />
-                  </svg>
-                ),
+                icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="2" width="14" height="20" rx="2" /><path d="M12 18h.01" /></svg>,
                 title: "Mobile-First",
                 desc: "80% of diners search on their phones. Your site will look stunning on every screen size.",
               },
               {
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="M21 21l-4.35-4.35" />
-                  </svg>
-                ),
+                icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>,
                 title: "SEO Built In",
                 desc: "Structured data, optimized meta tags, and clean code so Google knows exactly what you serve and where.",
               },
             ].map((item, i) => (
-              <motion.div
-                key={item.title}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={i}
-                variants={fadeUp}
-                className="p-6 rounded-lg border border-[#2a2725] bg-[#0a0a0a] hover:border-[#c9a85c]/40 transition-colors"
-              >
+              <motion.div key={item.title} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="p-6 rounded-lg border border-[#2a2725] bg-[#0a0a0a] hover:border-[#c9a85c]/40 transition-colors">
                 <div className="text-[#c9a85c] mb-4">{item.icon}</div>
                 <h3 className="font-display text-lg font-semibold mb-2">{item.title}</h3>
                 <p className="text-sm text-[#e8e0d6]/50 leading-relaxed">{item.desc}</p>
@@ -385,150 +391,74 @@ export default function Home() {
       {/* PRICING */}
       <section id="pricing" className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={0}
-            variants={fadeUp}
-            className="text-center mb-16"
-          >
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-16">
             <p className="text-[#c9a85c] text-sm font-semibold tracking-[0.2em] uppercase mb-4">Pricing</p>
-            <h2 className="font-display text-4xl md:text-5xl font-bold">
-              Simple, Transparent Pricing
-            </h2>
+            <h2 className="font-display text-4xl md:text-5xl font-bold">Simple, Transparent Pricing</h2>
             <p className="text-[#e8e0d6]/50 mt-4 text-lg max-w-xl mx-auto">
-              One-time build fee. No surprises. Optional hosting and maintenance plans available.
+              One-time build fee. No surprises. Optional hosting and maintenance available.
             </p>
           </motion.div>
 
-          {/* Three tiers */}
-          <div className="grid md:grid-cols-3 gap-6 mb-10">
-            {/* Standard */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={0}
-              variants={fadeUp}
-              className="rounded-lg border border-[#2a2725] bg-[#0e0d0b] p-8 flex flex-col"
-            >
-              <p className="text-sm font-semibold tracking-[0.15em] uppercase text-[#e8e0d6]/50 mb-2">Standard</p>
-              <div className="mb-1">
-                <span className="font-display text-4xl font-bold">$1,500</span>
-              </div>
-              <p className="text-sm text-[#e8e0d6]/40 mb-6">Starting price, one-time</p>
-              <div className="h-px bg-[#2a2725] mb-6" />
-              <ul className="space-y-3 mb-8 flex-1">
-                {standardFeatures.map((f) => (
-                  <li key={f} className="flex items-start gap-3 text-sm text-[#e8e0d6]/70">
-                    <svg className="text-[#c9a85c] mt-0.5 shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="#contact"
-                className="block text-center py-3 rounded-full border border-[#3d3835] text-[#e8e0d6] font-semibold text-sm hover:border-[#c9a85c] hover:text-[#c9a85c] transition-colors"
+          <div className="grid md:grid-cols-3 gap-0 md:gap-px bg-transparent md:bg-[#2a2725] rounded-xl overflow-hidden mb-6">
+            {tiers.map((tier, i) => (
+              <motion.div
+                key={tier.name}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                custom={i}
+                variants={fadeUp}
+                className={`flex flex-col p-8 md:p-10 ${tier.featured ? "bg-[#141414]" : "bg-[#0e0d0b]"} ${i !== 0 ? "mt-4 md:mt-0" : ""} rounded-xl md:rounded-none`}
               >
-                Get Started
-              </a>
-            </motion.div>
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className={`text-xs font-semibold tracking-[0.15em] uppercase ${tier.featured ? "text-[#c9a85c]" : "text-[#e8e0d6]/40"}`}>
+                      {tier.name}
+                    </p>
+                    <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${tier.featured ? "bg-[#c9a85c]/15 text-[#c9a85c]" : "bg-[#2a2725] text-[#e8e0d6]/40"}`}>
+                      {tier.tag}
+                    </span>
+                  </div>
+                  <p className="font-display text-4xl md:text-5xl font-bold mb-2">{tier.price}<span className="text-base font-normal text-[#e8e0d6]/30 ml-1">+</span></p>
+                  <p className="text-sm text-[#e8e0d6]/40">One-time</p>
+                </div>
 
-            {/* Professional */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={1}
-              variants={fadeUp}
-              className="rounded-lg border border-[#2a2725] bg-[#0e0d0b] p-8 flex flex-col"
-            >
-              <p className="text-sm font-semibold tracking-[0.15em] uppercase text-[#e8e0d6]/50 mb-2">Professional</p>
-              <div className="mb-1">
-                <span className="font-display text-4xl font-bold">$2,500</span>
-              </div>
-              <p className="text-sm text-[#e8e0d6]/40 mb-6">Starting price, one-time</p>
-              <div className="h-px bg-[#2a2725] mb-6" />
-              <ul className="space-y-3 mb-8 flex-1">
-                {professionalFeatures.map((f) => (
-                  <li key={f} className="flex items-start gap-3 text-sm text-[#e8e0d6]/70">
-                    <svg className="text-[#c9a85c] mt-0.5 shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="#contact"
-                className="block text-center py-3 rounded-full border border-[#3d3835] text-[#e8e0d6] font-semibold text-sm hover:border-[#c9a85c] hover:text-[#c9a85c] transition-colors"
-              >
-                Get Started
-              </a>
-            </motion.div>
+                <p className="text-sm text-[#e8e0d6]/60 leading-relaxed mb-6 pb-6 border-b border-[#2a2725]">
+                  {tier.description}
+                </p>
 
-            {/* Premium */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={2}
-              variants={fadeUp}
-              className="rounded-lg border border-[#c9a85c]/40 bg-[#0e0d0b] p-8 flex flex-col relative"
-            >
-              <div className="absolute top-4 right-4 text-xs font-semibold tracking-[0.15em] uppercase text-[#0a0a0a] bg-[#c9a85c] px-3 py-1 rounded-full">
-                Most Popular
-              </div>
-              <p className="text-sm font-semibold tracking-[0.15em] uppercase text-[#c9a85c] mb-2">Premium</p>
-              <div className="mb-1">
-                <span className="font-display text-4xl font-bold">$3,500</span>
-              </div>
-              <p className="text-sm text-[#e8e0d6]/40 mb-6">Starting price, one-time</p>
-              <div className="h-px bg-[#2a2725] mb-6" />
-              <ul className="space-y-3 mb-8 flex-1">
-                {premiumFeatures.map((f) => (
-                  <li key={f} className="flex items-start gap-3 text-sm text-[#e8e0d6]/70">
-                    <svg className="text-[#c9a85c] mt-0.5 shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="#contact"
-                className="block text-center py-3 rounded-full bg-[#c9a85c] text-[#0a0a0a] font-semibold text-sm hover:bg-[#dfc88a] transition-colors"
-              >
-                Get Started
-              </a>
-            </motion.div>
+                <ul className="space-y-3 flex-1 mb-8">
+                  {tier.features.map((f) => (
+                    <li key={f} className="flex items-start gap-3 text-sm text-[#e8e0d6]/60">
+                      <svg className="text-[#c9a85c] mt-0.5 shrink-0" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M20 6L9 17l-5-5" />
+                      </svg>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+
+                <a
+                  href="#contact"
+                  className={`block text-center py-3 rounded-full text-sm font-semibold transition-colors ${
+                    tier.featured
+                      ? "bg-[#c9a85c] text-[#0a0a0a] hover:bg-[#dfc88a]"
+                      : "border border-[#3d3835] text-[#e8e0d6] hover:border-[#c9a85c] hover:text-[#c9a85c]"
+                  }`}
+                >
+                  Get Started
+                </a>
+              </motion.div>
+            ))}
           </div>
 
-          {/* Hosting note */}
-          <motion.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={3}
-            variants={fadeUp}
-            className="text-center text-[#e8e0d6]/40 text-sm mb-16"
-          >
-            After launch, host it yourself or add an annual hosting plan for <span className="text-[#e8e0d6]/70">$200/year</span> covering your domain and hosting.
+          <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={3} variants={fadeUp} className="text-center text-[#e8e0d6]/30 text-sm mb-20">
+            After launch, host it yourself or add an annual plan for <span className="text-[#e8e0d6]/60">$200/year</span> covering your domain and hosting.
           </motion.p>
 
           {/* Retainer */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={4}
-            variants={fadeUp}
-            className="text-center mb-8"
-          >
-            <p className="text-[#c9a85c] text-sm font-semibold tracking-[0.2em] uppercase mb-2">Optional</p>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={4} variants={fadeUp} className="text-center mb-10">
+            <p className="text-[#c9a85c] text-sm font-semibold tracking-[0.2em] uppercase mb-2">Optional Add-on</p>
             <h3 className="font-display text-2xl md:text-3xl font-bold">Monthly Maintenance</h3>
             <p className="text-[#e8e0d6]/50 mt-2 text-sm max-w-md mx-auto">
               Menu updates, photo swaps, hour changes, and peace of mind. Restaurant owners have enough to manage.
@@ -536,19 +466,20 @@ export default function Home() {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {retainerPlans.map((r, i) => (
-              <motion.div
-                key={r.name}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={i}
-                variants={fadeUp}
-                className="rounded-lg border border-[#2a2725] bg-[#0e0d0b] p-6"
-              >
+            {[
+              {
+                name: "Basic", price: "$100", period: "/month", desc: "Standard sites",
+                items: ["Hosting covered", "Security updates", "Up to 2 content changes/month", "Email support"],
+              },
+              {
+                name: "Growth", price: "$150", period: "/month", desc: "Premium sites",
+                items: ["Everything in Basic", "Up to 5 content changes/month", "Instagram feed monitoring", "Priority response"],
+              },
+            ].map((r, i) => (
+              <motion.div key={r.name} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="rounded-xl border border-[#2a2725] bg-[#0e0d0b] p-6">
                 <div className="flex items-center justify-between mb-1">
                   <p className="font-display text-lg font-semibold">{r.name}</p>
-                  <p className="text-xs text-[#e8e0d6]/40">{r.desc}</p>
+                  <p className="text-xs text-[#e8e0d6]/30">{r.desc}</p>
                 </div>
                 <div className="flex items-end gap-1 mb-6">
                   <span className="font-display text-3xl font-bold text-[#c9a85c]">{r.price}</span>
@@ -556,7 +487,7 @@ export default function Home() {
                 </div>
                 <ul className="space-y-2.5">
                   {r.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2.5 text-sm text-[#e8e0d6]/60">
+                    <li key={item} className="flex items-start gap-2.5 text-sm text-[#e8e0d6]/50">
                       <svg className="text-[#c9a85c] mt-0.5 shrink-0" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <path d="M20 6L9 17l-5-5" />
                       </svg>
@@ -573,60 +504,135 @@ export default function Home() {
       {/* CONTACT */}
       <section id="contact" className="py-24 px-6 bg-[#0e0d0b]">
         <div className="max-w-2xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={0}
-            variants={fadeUp}
-            className="text-center mb-12"
-          >
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-12">
             <p className="text-[#c9a85c] text-sm font-semibold tracking-[0.2em] uppercase mb-4">Get Started</p>
-            <h2 className="font-display text-4xl md:text-5xl font-bold">
-              Let&apos;s Build Your Site
-            </h2>
+            <h2 className="font-display text-4xl md:text-5xl font-bold">Let&apos;s Talk About Your Restaurant</h2>
             <p className="text-[#e8e0d6]/50 mt-4 text-lg">
-              Tell me about your restaurant and I&apos;ll get back to you within 24 hours.
+              Tell me a little about your place and what you&apos;re looking for. I&apos;ll get back to you within 24 hours.
             </p>
           </motion.div>
 
           {submitted ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-16"
-            >
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-16">
               <p className="font-display text-2xl font-semibold text-[#c9a85c]">Thank you!</p>
-              <p className="text-[#e8e0d6]/50 mt-2">I&apos;ll be in touch soon.</p>
+              <p className="text-[#e8e0d6]/50 mt-2">I&apos;ll be in touch within 24 hours.</p>
             </motion.div>
           ) : (
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={1}
-              variants={fadeUp}
-              className="space-y-5"
-            >
-              {[
-                { label: "Your Name", key: "name", type: "text" },
-                { label: "Email", key: "email", type: "email" },
-                { label: "Restaurant Name", key: "restaurant", type: "text" },
-              ].map((field) => (
-                <div key={field.key}>
-                  <label className="block text-sm font-medium text-[#e8e0d6]/70 mb-1.5">{field.label}</label>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp} className="space-y-5">
+
+              {/* Row 1 — Name + Email */}
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-[#e8e0d6]/60 mb-1.5">Your Name</label>
                   <input
-                    type={field.type}
-                    value={formData[field.key as keyof typeof formData]}
-                    onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-4 py-3 rounded-lg bg-[#141414] border border-[#2a2725] text-[#e8e0d6] placeholder:text-[#e8e0d6]/20 focus:outline-none focus:border-[#c9a85c] transition-colors"
                   />
                 </div>
-              ))}
+                <div>
+                  <label className="block text-sm font-medium text-[#e8e0d6]/60 mb-1.5">Email</label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-[#141414] border border-[#2a2725] text-[#e8e0d6] placeholder:text-[#e8e0d6]/20 focus:outline-none focus:border-[#c9a85c] transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* Row 2 — Restaurant + Instagram */}
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-[#e8e0d6]/60 mb-1.5">Restaurant Name</label>
+                  <input
+                    type="text"
+                    value={formData.restaurant}
+                    onChange={(e) => setFormData({ ...formData, restaurant: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-[#141414] border border-[#2a2725] text-[#e8e0d6] placeholder:text-[#e8e0d6]/20 focus:outline-none focus:border-[#c9a85c] transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#e8e0d6]/60 mb-1.5">Instagram Handle <span className="text-[#e8e0d6]/30">(optional)</span></label>
+                  <input
+                    type="text"
+                    placeholder="@yourrestaurant"
+                    value={formData.instagram}
+                    onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-[#141414] border border-[#2a2725] text-[#e8e0d6] placeholder:text-[#e8e0d6]/20 focus:outline-none focus:border-[#c9a85c] transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* Row 3 — Type + Tier */}
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-[#e8e0d6]/60 mb-1.5">Restaurant Type</label>
+                  <select
+                    value={formData.type}
+                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-[#141414] border border-[#2a2725] text-[#e8e0d6] focus:outline-none focus:border-[#c9a85c] transition-colors"
+                  >
+                    <option value="" disabled>Select one</option>
+                    <option>Fine Dining</option>
+                    <option>Casual Dining</option>
+                    <option>Fast Casual</option>
+                    <option>Food Truck</option>
+                    <option>Cafe or Bakery</option>
+                    <option>Bar or Lounge</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#e8e0d6]/60 mb-1.5">Interested In</label>
+                  <select
+                    value={formData.tier}
+                    onChange={(e) => setFormData({ ...formData, tier: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-[#141414] border border-[#2a2725] text-[#e8e0d6] focus:outline-none focus:border-[#c9a85c] transition-colors"
+                  >
+                    <option value="" disabled>Select a tier</option>
+                    <option>Standard ($1,500+)</option>
+                    <option>Professional ($2,500+)</option>
+                    <option>Premium ($3,500+)</option>
+                    <option>Not sure yet</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 4 — Existing website + Timeline */}
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-[#e8e0d6]/60 mb-1.5">Do you have an existing website?</label>
+                  <select
+                    value={formData.hasWebsite}
+                    onChange={(e) => setFormData({ ...formData, hasWebsite: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-[#141414] border border-[#2a2725] text-[#e8e0d6] focus:outline-none focus:border-[#c9a85c] transition-colors"
+                  >
+                    <option value="" disabled>Select one</option>
+                    <option>Yes, needs a redesign</option>
+                    <option>No, starting from scratch</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#e8e0d6]/60 mb-1.5">Timeline</label>
+                  <select
+                    value={formData.timeline}
+                    onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-[#141414] border border-[#2a2725] text-[#e8e0d6] focus:outline-none focus:border-[#c9a85c] transition-colors"
+                  >
+                    <option value="" disabled>Select one</option>
+                    <option>ASAP</option>
+                    <option>Within 1 month</option>
+                    <option>1 to 3 months</option>
+                    <option>Just exploring</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Message */}
               <div>
-                <label className="block text-sm font-medium text-[#e8e0d6]/70 mb-1.5">
-                  Tell me about your project
-                </label>
+                <label className="block text-sm font-medium text-[#e8e0d6]/60 mb-1.5">Anything else you want me to know <span className="text-[#e8e0d6]/30">(optional)</span></label>
                 <textarea
                   rows={4}
                   value={formData.message}
@@ -634,12 +640,13 @@ export default function Home() {
                   className="w-full px-4 py-3 rounded-lg bg-[#141414] border border-[#2a2725] text-[#e8e0d6] placeholder:text-[#e8e0d6]/20 focus:outline-none focus:border-[#c9a85c] transition-colors resize-none"
                 />
               </div>
+
               <button
                 onClick={handleSubmit}
                 disabled={sending}
                 className="w-full py-3.5 rounded-full bg-[#c9a85c] text-[#0a0a0a] font-semibold text-base hover:bg-[#dfc88a] transition-colors disabled:opacity-50"
               >
-                {sending ? "Sending..." : "Send Message"}
+                {sending ? "Sending..." : "Send Inquiry"}
               </button>
             </motion.div>
           )}
