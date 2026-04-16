@@ -13,11 +13,11 @@ const projects = [
     image: "https://api.microlink.io/?url=https://ichimi.vercel.app/&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&waitForTimeout=3000",
   },
   {
-    name: "Sushi Masa",
-    url: "https://sushi-masa.vercel.app/",
-    tag: "Sushi",
-    description: "Clean, appetizing design for a sushi restaurant that puts the food front and center.",
-    image: "https://api.microlink.io/?url=https://sushi-masa.vercel.app/&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&waitForTimeout=3000",
+    name: "Gyo Gyo",
+    url: "https://gyo-gyo.vercel.app/",
+    tag: "Gyoza · Japanese",
+    description: "An artisan gyoza specialist with a light and dark mode toggle, blending warm lantern aesthetics with the charm of handcrafted Japanese street food.",
+    image: "https://api.microlink.io/?url=https://gyo-gyo.vercel.app/&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&waitForTimeout=3000",
   },
   {
     name: "Li Lin",
@@ -34,11 +34,11 @@ const projects = [
     image: "https://api.microlink.io/?url=https://fei-sushi.vercel.app/&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&waitForTimeout=3000",
   },
   {
-    name: "So Sushi",
-    url: "https://so-sushi.vercel.app/",
-    tag: "Japanese",
-    description: "Modern and playful branding brought to life through an engaging web experience.",
-    image: "https://api.microlink.io/?url=https://so-sushi.vercel.app/&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&waitForTimeout=3000",
+    name: "Matcha Cafe",
+    url: "https://matcha-cafe-kappa.vercel.app/",
+    tag: "Japanese Cafe",
+    description: "A serene, editorial experience for a Japanese tea house built around slow sourcing and single-origin ceremonial matcha.",
+    image: "https://api.microlink.io/?url=https://matcha-cafe-kappa.vercel.app/&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&waitForTimeout=3000",
   },
   {
     name: "Pizza Truck",
