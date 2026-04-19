@@ -6,6 +6,27 @@ import { useState } from "react";
 
 const projects = [
   {
+    name: "Jicara",
+    url: "https://jicara.vercel.app/",
+    tag: "Taqueria",
+    description: "A vibrant taqueria website with bold color, craveable food photography, and a lively atmosphere that feels ready for lunch rush and late-night orders.",
+    image: "https://api.microlink.io/?url=https://jicara.vercel.app/&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&waitForTimeout=3000",
+  },
+  {
+    name: "Aube",
+    url: "https://aube-black.vercel.app/",
+    tag: "Parisian Brunch",
+    description: "A chic French brunch experience inspired by Paris cafe culture, pairing soft editorial styling with an elevated, leisurely feel.",
+    image: "https://api.microlink.io/?url=https://aube-black.vercel.app/&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&waitForTimeout=3000",
+  },
+  {
+    name: "Cluck",
+    url: "https://cluck-theta.vercel.app/",
+    tag: "Chicken & Waffles",
+    description: "A fast-casual concept built around chicken and waffles, mixing punchy branding with a quick, high-energy ordering experience.",
+    image: "https://api.microlink.io/?url=https://cluck-theta.vercel.app/&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&waitForTimeout=3000",
+  },
+  {
     name: "Ichimi",
     url: "https://ichimi.vercel.app/",
     tag: "Japanese",
